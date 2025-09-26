@@ -1,11 +1,23 @@
-import React from 'react';
-import { Link, useLocation } from 'react-router-dom';
+import React, { useState } from 'react';
+import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
+import { Badge } from '@/components/ui/badge';
 import { Search, ShoppingCart, User, Menu } from 'lucide-react';
+import CategoryDrawer from './CategoryDrawer';
+import { useCart } from '@/contexts/CartContext';
 
 const Header = () => {
   const location = useLocation();
+  const navigate = useNavigate();
+  const { getTotalItems } = useCart();
+  const [searchQuery, setSearchQuery] = useState('');
+
+  const handleSearch = () => {
+    if (searchQuery.trim()) {
+      navigate(`/search?q=${encodeURIComponent(searchQuery.trim())}`);
+    }
+  };
 
   return (
     <header className="bg-background border-b border-border sticky top-0 z-50">
@@ -24,10 +36,18 @@ const Header = () => {
               <Input
                 type="text"
                 placeholder="Search products..."
+                value={searchQuery}
+                onChange={(e) => setSearchQuery(e.target.value)}
+                onKeyDown={(e) => {
+                  if (e.key === 'Enter') {
+                    handleSearch();
+                  }
+                }}
                 className="w-full pl-4 pr-12 py-2 rounded-lg border-2 border-muted focus:border-primary transition-colors"
               />
               <Button
                 size="sm"
+                onClick={handleSearch}
                 className="absolute right-1 top-1 bottom-1 px-3 bg-gradient-primary hover:opacity-90"
               >
                 <Search className="h-4 w-4" />
@@ -41,24 +61,36 @@ const Header = () => {
               <User className="h-4 w-4" />
               <span className="hidden md:inline">Account</span>
             </Button>
-            <Button variant="ghost" size="sm" className="flex items-center space-x-2">
-              <ShoppingCart className="h-4 w-4" />
-              <span className="hidden md:inline">Cart</span>
-            </Button>
+            <Link to="/cart">
+              <Button variant="ghost" size="sm" className="flex items-center space-x-2 relative">
+                <ShoppingCart className="h-4 w-4" />
+                <span className="hidden md:inline">Cart</span>
+                {getTotalItems() > 0 && (
+                  <Badge 
+                    variant="destructive" 
+                    className="absolute -top-2 -right-2 h-5 w-5 rounded-full p-0 flex items-center justify-center text-xs"
+                  >
+                    {getTotalItems()}
+                  </Badge>
+                )}
+              </Button>
+            </Link>
           </div>
         </div>
 
         {/* Navigation */}
         <nav className="py-2 border-t border-border">
           <div className="flex items-center space-x-8 overflow-x-auto">
-            <Button
-              variant="ghost"
-              size="sm"
-              className="flex items-center space-x-1"
-            >
-              <Menu className="h-4 w-4" />
-              <span>All</span>
-            </Button>
+            <CategoryDrawer>
+              <Button
+                variant="ghost"
+                size="sm"
+                className="flex items-center space-x-1"
+              >
+                <Menu className="h-4 w-4" />
+                <span>All</span>
+              </Button>
+            </CategoryDrawer>
             
             <Link to="/category/men-bags">
               <Button 

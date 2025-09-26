@@ -2,7 +2,9 @@ import React from 'react';
 import { Card, CardContent } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
-import { Star, ExternalLink } from 'lucide-react';
+import { Star, ExternalLink, ShoppingCart } from 'lucide-react';
+import { useCart } from '@/contexts/CartContext';
+import { useToast } from '@/hooks/use-toast';
 
 interface Product {
   title: string;
@@ -15,7 +17,7 @@ interface Product {
   price?: {
     value: number;
     currency: string;
-  };
+  } | string;
   url: string;
   category: string;
 }
@@ -25,8 +27,20 @@ interface ProductCardProps {
 }
 
 const ProductCard: React.FC<ProductCardProps> = ({ product }) => {
+  const { addToCart } = useCart();
+  const { toast } = useToast();
+  
   const handleProductClick = () => {
     window.open(product.url, '_blank', 'noopener,noreferrer');
+  };
+
+  const handleAddToCart = (e: React.MouseEvent) => {
+    e.stopPropagation();
+    addToCart(product);
+    toast({
+      title: "Added to cart",
+      description: `${product.title} has been added to your cart.`,
+    });
   };
 
   const renderStars = (rating?: number) => {
@@ -104,20 +118,31 @@ const ProductCard: React.FC<ProductCardProps> = ({ product }) => {
         <div className="flex items-center justify-between">
           {product.price ? (
             <span className="text-lg font-bold text-primary">
-              {product.price.currency}{product.price.value}
+              {typeof product.price === 'string' ? product.price : `${product.price.currency}${product.price.value}`}
             </span>
           ) : (
             <span className="text-sm text-muted-foreground">Price on Amazon</span>
           )}
           
-          <Button
-            onClick={handleProductClick}
-            size="sm"
-            className="bg-gradient-primary hover:opacity-90 transition-opacity"
-          >
-            <ExternalLink className="h-3 w-3 mr-1" />
-            View
-          </Button>
+          <div className="flex space-x-1">
+            <Button
+              onClick={handleAddToCart}
+              variant="outline"
+              size="sm"
+              className="border-primary text-primary hover:bg-primary hover:text-white p-2"
+            >
+              <ShoppingCart className="h-3 w-3" />
+            </Button>
+            
+            <Button
+              onClick={handleProductClick}
+              size="sm"
+              className="bg-gradient-primary hover:opacity-90 transition-opacity"
+            >
+              <ExternalLink className="h-3 w-3 mr-1" />
+              View
+            </Button>
+          </div>
         </div>
       </CardContent>
     </Card>

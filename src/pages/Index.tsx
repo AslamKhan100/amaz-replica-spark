@@ -110,8 +110,8 @@ const Index = () => {
             </Button>
             <Button 
               size="lg" 
-              variant="outline" 
-              className="border-white text-white hover:bg-white hover:text-primary px-8 py-3 text-lg font-semibold"
+              variant="secondary" 
+              className="bg-white/10 text-white border border-white/20 hover:bg-white/20 backdrop-blur-sm px-8 py-3 text-lg font-semibold transition-all duration-300"
               onClick={() => setIsChatOpen(true)}
             >
               Try AI Assistant
