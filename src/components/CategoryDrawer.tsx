@@ -60,7 +60,7 @@ const CategoryDrawer: React.FC<CategoryDrawerProps> = ({ children }) => {
       <SheetTrigger asChild>
         {children}
       </SheetTrigger>
-      <SheetContent side="left" className="w-80">
+      <SheetContent side="left" className="w-80 overflow-y-auto">
         <SheetHeader>
           <SheetTitle className="text-left">All Categories</SheetTitle>
           <SheetDescription className="text-left">
@@ -73,12 +73,12 @@ const CategoryDrawer: React.FC<CategoryDrawerProps> = ({ children }) => {
             <Link key={category.slug} to={`/category/${category.slug}`}>
               <Button
                 variant="ghost"
-                className="w-full justify-start h-auto p-4 text-left hover:bg-muted"
+                className="w-full justify-start h-auto p-4 text-left hover:bg-accent/50 rounded-lg border"
               >
-                <category.icon className="mr-3 h-5 w-5 text-primary" />
-                <div>
-                  <div className="font-semibold">{category.title}</div>
-                  <div className="text-sm text-muted-foreground">
+                <category.icon className="mr-3 h-5 w-5 text-primary flex-shrink-0" />
+                <div className="text-left overflow-hidden">
+                  <div className="font-semibold text-sm truncate">{category.title}</div>
+                  <div className="text-xs text-muted-foreground leading-relaxed break-words">
                     {category.description}
                   </div>
                 </div>

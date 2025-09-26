@@ -57,7 +57,14 @@ const Header = () => {
 
           {/* Right side buttons */}
           <div className="flex items-center space-x-4">
-            <Button variant="ghost" size="sm" className="flex items-center space-x-2">
+            <Button 
+              variant="ghost" 
+              size="sm" 
+              className="flex items-center space-x-2"
+              onClick={() => {
+                alert('Account feature is currently not available. Coming soon!');
+              }}
+            >
               <User className="h-4 w-4" />
               <span className="hidden md:inline">Account</span>
             </Button>

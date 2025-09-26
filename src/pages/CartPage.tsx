@@ -99,7 +99,12 @@ const CartPage = () => {
                         {item.title}
                       </h3>
                       <p className="text-2xl font-bold text-primary mb-4">
-                        {item.price}
+                        {(() => {
+                          if (typeof item.price === 'object' && item.price && 'value' in item.price) {
+                            return `${(item.price as any).currency || '$'}${(item.price as any).value}`;
+                          }
+                          return item.price || 'Price not available';
+                        })()}
                       </p>
                       
                       <div className="flex items-center justify-between">
